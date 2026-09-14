@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -12,11 +13,17 @@
     -webkit-tap-highlight-color:transparent;
 }
 
+html,
+body{
+    width:100%;
+    height:100%;
+}
+
 body{
     margin:0;
     background:#080b14;
     color:white;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     overflow:hidden;
 }
 
@@ -25,6 +32,7 @@ button{
     border:none;
     cursor:pointer;
     color:white;
+    touch-action:manipulation;
 }
 
 .screen{
@@ -72,7 +80,7 @@ button{
     box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.08),
         0 10px 30px rgba(0,0,0,.35);
-    transition:.15s;
+    transition:transform .15s;
 }
 
 .op-btn:active{
@@ -419,6 +427,7 @@ button{
     opacity:0;
     animation:confettiFall var(--fall) cubic-bezier(.18,.72,.25,1) forwards;
     transform:rotate(var(--rotate));
+    will-change:transform,opacity;
 }
 
 @keyframes confettiFall{
@@ -532,7 +541,7 @@ button{
     font-weight:900;
     opacity:0;
     pointer-events:none;
-    z-index:20;
+    z-index:60;
 }
 
 .feedback.show{
@@ -540,10 +549,22 @@ button{
 }
 
 @keyframes feedback{
-    0%{opacity:0;transform:translate(-50%,-50%) scale(.6);}
-    25%{opacity:1;transform:translate(-50%,-50%) scale(1.15);}
-    70%{opacity:1;transform:translate(-50%,-50%) scale(1);}
-    100%{opacity:0;transform:translate(-50%,-65%) scale(1);}
+    0%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.6);
+    }
+    25%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.15);
+    }
+    70%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1);
+    }
+    100%{
+        opacity:0;
+        transform:translate(-50%,-65%) scale(1);
+    }
 }
 
 .correct-text{
@@ -581,7 +602,6 @@ button{
     </div>
 
     <button class="score-menu" onclick="showScores()">🏆 SKORLAR</button>
-
     <button class="rules-menu" onclick="showRules()">📖 KURALLAR</button>
 
 </div>
@@ -607,9 +627,7 @@ button{
         <div class="choice-row">
 
             <button class="choice" onclick="selectCount(2,this)">2</button>
-
             <button class="choice" onclick="selectCount(3,this)">3</button>
-
             <button class="choice" onclick="selectCount(4,this)">4</button>
 
         </div>
@@ -659,7 +677,6 @@ button{
         <div class="score-area">
 
             <span class="small-label">SERİ SKORU</span>
-
             <span class="game-score" id="gameScore">0</span>
 
         </div>
@@ -667,7 +684,6 @@ button{
         <div class="timer-area" id="timerArea">
 
             <span class="small-label">SÜRE</span>
-
             <span class="timer" id="timer">0.00</span>
 
         </div>
@@ -681,7 +697,7 @@ button{
         <input
             id="answer"
             class="answer"
-            type="number"
+            type="text"
             inputmode="none"
             autocomplete="off"
             readonly
@@ -705,7 +721,6 @@ button{
         <button class="key" onclick="keyPress('9')">9</button>
 
         <button class="key zero" onclick="keyPress('0')">0</button>
-
         <button class="key delete" onclick="deleteKey()">⌫</button>
 
         <button class="key enter" onclick="checkAnswer()">✓</button>
@@ -749,81 +764,60 @@ button{
     <div class="rules-content">
 
         <div class="rule-card">
-
             <div class="rule-title">🎯 Oyunun Amacı</div>
-
             <div class="rule-text">
                 Math Rush'ta amaç, karşına çıkan matematik işlemlerini
                 mümkün olduğunca hızlı ve doğru şekilde çözmektir.
             </div>
-
         </div>
 
         <div class="rule-card">
-
             <div class="rule-title">➕ İşlem Seçimi</div>
-
             <div class="rule-text">
                 Ana menüden toplama, çıkarma, çarpma veya bölme işlemlerinden
                 birini seçebilirsin.
             </div>
-
         </div>
 
         <div class="rule-card">
-
             <div class="rule-title">🔢 Sayı Ayarları</div>
-
             <div class="rule-text">
                 Oyuna başlamadan önce kaç sayı kullanılacağını ve her sayının
                 kaç basamaklı olacağını belirleyebilirsin.
             </div>
-
         </div>
 
         <div class="rule-card">
-
             <div class="rule-title">⏱️ Oyun Modları</div>
-
             <div class="rule-text">
                 Süresiz modda istediğin hızda oynayabilirsin.
                 Süreli modda ise cevaplama hızına göre puan kazanırsın.
             </div>
-
         </div>
 
         <div class="rule-card">
-
             <div class="rule-title">⌨️ Cevaplama</div>
-
             <div class="rule-text">
                 Cevabını ekrandaki sayısal tuş takımını kullanarak gir.
                 ✓ butonuna basarak cevabını kontrol et.
             </div>
-
         </div>
 
         <div class="rule-card">
-
             <div class="rule-title">🏆 Skor Sistemi</div>
-
             <div class="rule-text">
                 Doğru cevaplar puan kazandırır. Süreli modda daha hızlı
                 cevaplar daha yüksek puan getirir. En iyi skorların
                 Skorlar bölümünde saklanır.
             </div>
-
         </div>
 
         <div class="rule-card">
-
             <div class="rule-title">🔥 Seri</div>
-
             <div class="rule-text">
                 Arka arkaya doğru cevaplar verdiğinde seri oluşturursun.
                 Seri yükseldikçe özel görsel efektler ortaya çıkar.
             </div>
-
         </div>
 
         <div class="developer">
@@ -836,36 +830,64 @@ button{
 
 
 <div id="feedback" class="feedback"></div>
-
 <div id="confetti"></div>
 
 
 <script>
 
-let operation = '+';
-let numberCount = 2;
-let digits = [1,1,1,1];
-let timed = false;
+/* ================= DURUM ================= */
 
-let currentNumbers = [];
-let correctAnswer = 0;
+let operation='+';
+let numberCount=2;
+let digits=[1,1,1,1];
+let timed=false;
 
-let seriesScore = 0;
-let correctStreak = 0;
-let timerStart = 0;
-let timerInterval = null;
+let currentNumbers=[];
+let correctAnswer=0;
 
-let currentCategory = '';
+let seriesScore=0;
+let correctStreak=0;
+
+let timerStart=0;
+let timerInterval=null;
+
+let nextProblemTimeout=null;
+
+let currentCategory='';
+
+let gameActive=false;
+
+
+/* ================= DOM ================= */
+
+const menu=document.getElementById('menu');
+const settings=document.getElementById('settings');
+const game=document.getElementById('game');
+const scoresScreen=document.getElementById('scores');
+const rulesScreen=document.getElementById('rules');
+
+const problemElement=document.getElementById('problem');
+const answerInput=document.getElementById('answer');
+const gameScoreElement=document.getElementById('gameScore');
+const timerElement=document.getElementById('timer');
+const timerArea=document.getElementById('timerArea');
+const feedbackElement=document.getElementById('feedback');
+const confettiContainer=document.getElementById('confetti');
+
 
 /* ================= EKRAN ================= */
 
 function showScreen(id){
 
-    document.querySelectorAll('.screen').forEach(s=>{
-        s.classList.remove('active');
+    document.querySelectorAll('.screen').forEach(screen=>{
+        screen.classList.remove('active');
     });
 
-    document.getElementById(id).classList.add('active');
+    const target=document.getElementById(id);
+
+    if(target){
+        target.classList.add('active');
+    }
 
 }
 
@@ -874,16 +896,16 @@ function showScreen(id){
 
 function openSettings(op){
 
-    operation = op;
+    operation=op;
 
-    const names = {
+    const names={
         '+':'Toplama',
         '-':'Çıkarma',
         '*':'Çarpma',
         '/':'Bölme'
     };
 
-    document.getElementById('settingsTitle').textContent = names[op];
+    document.getElementById('settingsTitle').textContent=names[op];
 
     showScreen('settings');
 
@@ -894,10 +916,11 @@ function openSettings(op){
 
 function selectCount(count,button){
 
-    numberCount = count;
+    numberCount=count;
 
-    const countButtons =
-        document.getElementById('countSettingBox')
+    const countButtons=
+        document
+        .getElementById('countSettingBox')
         .querySelectorAll('.choice');
 
     countButtons.forEach(b=>{
@@ -921,10 +944,9 @@ function selectCount(count,button){
 
 function createDigitSelectors(){
 
-    const container =
-        document.getElementById('digitContainer');
+    const container=document.getElementById('digitContainer');
 
-    container.innerHTML = '';
+    container.innerHTML='';
 
     for(let i=0;i<numberCount;i++){
 
@@ -999,15 +1021,12 @@ function selectMode(value,button){
 
 function randomNumber(digit){
 
-    if(digit===1){
-
+    if(digit<=1){
         return Math.floor(Math.random()*9)+1;
-
     }
 
-    const min=Math.pow(10,digit-1);
-
-    const max=Math.pow(10,digit)-1;
+    const min=10**(digit-1);
+    const max=(10**digit)-1;
 
     return Math.floor(
         Math.random()*(max-min+1)
@@ -1016,142 +1035,172 @@ function randomNumber(digit){
 }
 
 
-function generateProblem(){
+/*
+    Bölme işlemi için:
 
-    currentNumbers=[];
+    İlk sayı = bölenlerin çarpımı × bölüm
 
-    for(let i=0;i<numberCount;i++){
+    Böylece sonuç her zaman tam sayı olur.
+*/
+function generateDivisionProblem(){
 
-        currentNumbers.push(
+    const divisors=[];
+
+    for(let i=1;i<numberCount;i++){
+
+        divisors.push(
             randomNumber(digits[i])
         );
 
     }
 
-    if(operation==='+'){
+    const divisorProduct=
+        divisors.reduce((a,b)=>a*b,1);
 
-        correctAnswer =
-            currentNumbers.reduce((a,b)=>a+b,0);
+    /*
+        İlk sayının seçilen basamak sayısına
+        mümkün olduğunca uyması için uygun
+        bir bölüm arıyoruz.
+    */
+
+    const firstDigit=digits[0];
+
+    const minFirst=
+        firstDigit===1
+            ? 1
+            : 10**(firstDigit-1);
+
+    const maxFirst=
+        (10**firstDigit)-1;
+
+    const minQuotient=
+        Math.max(
+            1,
+            Math.ceil(minFirst/divisorProduct)
+        );
+
+    const maxQuotient=
+        Math.floor(maxFirst/divisorProduct);
+
+    let quotient;
+
+    if(maxQuotient>=minQuotient){
+
+        quotient=
+            Math.floor(
+                Math.random()*
+                (maxQuotient-minQuotient+1)
+            )+
+            minQuotient;
+
+    }else{
+
+        /*
+            Bölenlerin çarpımı ilk sayının
+            seçilen basamak aralığına sığmıyorsa
+            en azından işlemi geçerli tut.
+        */
+
+        quotient=1;
 
     }
 
-    if(operation==='-'){
+    const firstNumber=
+        divisorProduct*quotient;
 
-        correctAnswer =
-            currentNumbers
-            .slice(1)
-            .reduce((a,b)=>a-b,currentNumbers[0]);
+    currentNumbers=[
+        firstNumber,
+        ...divisors
+    ];
 
+    correctAnswer=quotient;
+
+}
+
+
+/* ================= SORU ÜRETME ================= */
+
+function generateProblem(){
+
+    if(!gameActive){
+        return;
     }
 
-    if(operation==='*'){
-
-        correctAnswer =
-            currentNumbers.reduce((a,b)=>a*b,1);
-
-    }
+    currentNumbers=[];
 
     if(operation==='/'){
 
-        let divisor=1;
+        generateDivisionProblem();
 
-        for(let i=1;i<numberCount;i++){
+    }else{
 
-            divisor*=currentNumbers[i];
+        for(let i=0;i<numberCount;i++){
+
+            currentNumbers.push(
+                randomNumber(digits[i])
+            );
 
         }
 
-        let quotient=randomNumber(
-            Math.max(1,digits[0]-1)
-        );
+        if(operation==='+'){
 
-        currentNumbers[0]=divisor*quotient;
+            correctAnswer=
+                currentNumbers.reduce(
+                    (a,b)=>a+b,
+                    0
+                );
 
-        correctAnswer=quotient;
+        }else if(operation==='-'){
+
+            correctAnswer=
+                currentNumbers
+                .slice(1)
+                .reduce(
+                    (a,b)=>a-b,
+                    currentNumbers[0]
+                );
+
+        }else if(operation==='*'){
+
+            correctAnswer=
+                currentNumbers.reduce(
+                    (a,b)=>a*b,
+                    1
+                );
+
+        }
 
     }
 
-    let symbols={
+    const symbols={
         '+':' + ',
         '-':' − ',
         '*':' × ',
         '/':' ÷ '
     };
 
-    document.getElementById('problem').textContent =
+    problemElement.textContent=
         currentNumbers.join(symbols[operation]);
 
-    document.getElementById('answer').value='';
+    answerInput.value='';
 
-    setTimeout(()=>{
-
-        document.getElementById('answer').focus();
-
-    },100);
-
-}
-
-
-/* ================= OYUN ================= */
-
-function exitGame(){
-
-    clearInterval(timerInterval);
-
-    timerInterval=null;
-
-    correctStreak=0;
-
-    showScreen('menu');
+    requestAnimationFrame(()=>{
+        if(gameActive){
+            answerInput.focus();
+        }
+    });
 
 }
 
 
-function startGame(){
+/* ================= TIMER ================= */
 
-    clearInterval(timerInterval);
+function stopTimer(){
 
-    timerInterval=null;
+    if(timerInterval!==null){
 
-    seriesScore=0;
-
-    correctStreak=0;
-
-    document.getElementById('gameScore').textContent='0';
-
-    currentCategory =
-        operation+'_'+
-        numberCount+'_'+
-        digits
-        .slice(0,numberCount)
-        .join('-')+'_'+
-        (timed ? 'timed' : 'untimed');
-
-    showScreen('game');
-
-    if(timed){
-
-        document.getElementById('timerArea')
-            .style.visibility='visible';
-
-        document.getElementById('timer')
-            .textContent='0.00';
-
-    }else{
-
-        document.getElementById('timerArea')
-            .style.visibility='hidden';
-
-        document.getElementById('timer')
-            .textContent='0.00';
-
-    }
-
-    generateProblem();
-
-    if(timed){
-
-        startTimer();
+        clearInterval(timerInterval);
+        timerInterval=null;
 
     }
 
@@ -1160,19 +1209,26 @@ function startGame(){
 
 function startTimer(){
 
-    clearInterval(timerInterval);
+    stopTimer();
 
     timerStart=performance.now();
 
     timerInterval=setInterval(()=>{
 
-        const elapsed =
+        if(!gameActive){
+
+            stopTimer();
+            return;
+
+        }
+
+        const elapsed=
             (performance.now()-timerStart)/1000;
 
-        document.getElementById('timer')
-            .textContent=elapsed.toFixed(2);
+        timerElement.textContent=
+            elapsed.toFixed(2);
 
-    },20);
+    },50);
 
 }
 
@@ -1184,35 +1240,116 @@ function getElapsed(){
 }
 
 
+/* ================= OYUN ================= */
+
+function exitGame(){
+
+    gameActive=false;
+
+    stopTimer();
+
+    if(nextProblemTimeout!==null){
+
+        clearTimeout(nextProblemTimeout);
+        nextProblemTimeout=null;
+
+    }
+
+    correctStreak=0;
+    seriesScore=0;
+
+    showScreen('menu');
+
+}
+
+
+function startGame(){
+
+    stopTimer();
+
+    if(nextProblemTimeout!==null){
+
+        clearTimeout(nextProblemTimeout);
+        nextProblemTimeout=null;
+
+    }
+
+    seriesScore=0;
+    correctStreak=0;
+    gameActive=true;
+
+    gameScoreElement.textContent='0';
+
+    currentCategory=
+        operation+'_'+
+        numberCount+'_'+
+        digits
+        .slice(0,numberCount)
+        .join('-')+'_'+
+        (timed?'timed':'untimed');
+
+    showScreen('game');
+
+    if(timed){
+
+        timerArea.style.visibility='visible';
+        timerElement.textContent='0.00';
+
+    }else{
+
+        timerArea.style.visibility='hidden';
+        timerElement.textContent='0.00';
+
+    }
+
+    generateProblem();
+
+    if(timed){
+        startTimer();
+    }
+
+}
+
+
 /* ================= CEVAP ================= */
 
 function keyPress(number){
 
-    const input =
-        document.getElementById('answer');
+    if(!gameActive){
+        return;
+    }
 
-    input.value += number;
+    /*
+        Gereksiz derecede uzun cevap girişini
+        engelle.
+    */
+    if(answerInput.value.length>=10){
+        return;
+    }
 
-    input.focus();
+    answerInput.value+=number;
 
-    input.classList.remove('pop');
+    answerInput.focus();
 
-    void input.offsetWidth;
+    answerInput.classList.remove('pop');
 
-    input.classList.add('pop');
+    void answerInput.offsetWidth;
+
+    answerInput.classList.add('pop');
 
 }
 
 
 function deleteKey(){
 
-    const input =
-        document.getElementById('answer');
+    if(!gameActive){
+        return;
+    }
 
-    input.value =
-        input.value.slice(0,-1);
+    answerInput.value=
+        answerInput.value.slice(0,-1);
 
-    input.focus();
+    answerInput.focus();
 
 }
 
@@ -1222,7 +1359,6 @@ function keyboardAnswer(e){
     if(e.key==='Enter'){
 
         e.preventDefault();
-
         checkAnswer();
 
     }
@@ -1232,12 +1368,21 @@ function keyboardAnswer(e){
 
 function checkAnswer(){
 
-    const input =
-        document.getElementById('answer');
+    if(!gameActive){
+        return;
+    }
 
-    if(input.value==='') return;
+    const value=answerInput.value;
 
-    const userAnswer=Number(input.value);
+    if(value===''){
+        return;
+    }
+
+    const userAnswer=Number(value);
+
+    if(!Number.isFinite(userAnswer)){
+        return;
+    }
 
     if(userAnswer===correctAnswer){
 
@@ -1252,10 +1397,18 @@ function checkAnswer(){
 }
 
 
+/* ================= DOĞRU ================= */
+
 function correct(){
 
-    const elapsed =
-        timed ? getElapsed() : 0;
+    if(!gameActive){
+        return;
+    }
+
+    const elapsed=
+        timed
+            ? getElapsed()
+            : 0;
 
     let points;
 
@@ -1263,7 +1416,9 @@ function correct(){
 
         points=Math.max(
             10,
-            Math.round(1000/(elapsed+0.5))
+            Math.round(
+                1000/(elapsed+0.5)
+            )
         );
 
     }else{
@@ -1273,11 +1428,10 @@ function correct(){
     }
 
     seriesScore+=points;
-
     correctStreak++;
 
-    document.getElementById('gameScore')
-        .textContent=seriesScore;
+    gameScoreElement.textContent=
+        seriesScore;
 
     showFeedback(
         correctStreak>=3
@@ -1286,25 +1440,19 @@ function correct(){
         'correct-text'
     );
 
-    const game =
-        document.getElementById('game');
-
     game.classList.remove('correct-flash');
 
     void game.offsetWidth;
 
     game.classList.add('correct-flash');
 
-    const answer =
-        document.getElementById('answer');
-
-    answer.classList.remove(
+    answerInput.classList.remove(
         'correct-answer-pop'
     );
 
-    void answer.offsetWidth;
+    void answerInput.offsetWidth;
 
-    answer.classList.add(
+    answerInput.classList.add(
         'correct-answer-pop'
     );
 
@@ -1320,24 +1468,31 @@ function correct(){
 
         launchConfetti(40);
 
-        correctStreak=0;
+        /*
+            Seri artık sıfırlanmıyor.
+            Böylece 6,7,8... şeklinde devam ediyor.
+        */
 
     }
 
     saveScore(elapsed,seriesScore);
 
     if(timed){
-
         startTimer();
-
     }
 
-    setTimeout(generateProblem,350);
+    scheduleNextProblem();
 
 }
 
 
+/* ================= YANLIŞ ================= */
+
 function wrong(){
+
+    if(!gameActive){
+        return;
+    }
 
     correctStreak=0;
 
@@ -1346,22 +1501,43 @@ function wrong(){
         'wrong-text'
     );
 
-    document.getElementById('game')
-        .classList.remove('wrong-flash');
+    game.classList.remove('wrong-flash');
 
-    void document.getElementById('game')
-        .offsetWidth;
+    void game.offsetWidth;
 
-    document.getElementById('game')
-        .classList.add('wrong-flash');
+    game.classList.add('wrong-flash');
 
     if(timed){
-
         startTimer();
+    }
+
+    scheduleNextProblem();
+
+}
+
+
+/* ================= SORU GEÇİŞİ ================= */
+
+function scheduleNextProblem(){
+
+    if(nextProblemTimeout!==null){
+
+        clearTimeout(nextProblemTimeout);
 
     }
 
-    setTimeout(generateProblem,350);
+    nextProblemTimeout=
+        setTimeout(()=>{
+
+            nextProblemTimeout=null;
+
+            if(gameActive){
+
+                generateProblem();
+
+            }
+
+        },350);
 
 }
 
@@ -1370,12 +1546,26 @@ function wrong(){
 
 function launchConfetti(amount){
 
-    const container =
-        document.getElementById('confetti');
+    /*
+        Aynı anda aşırı fazla parçacık oluşmasını
+        önlemek için güvenli bir üst sınır.
+    */
+    amount=Math.min(amount,50);
+
+    const fragment=document.createDocumentFragment();
+
+    const colors=[
+        '#55f0a2',
+        '#6d8aff',
+        '#ffdc5e',
+        '#ff6b8a',
+        '#b77cff',
+        '#ffffff'
+    ];
 
     for(let i=0;i<amount;i++){
 
-        const piece =
+        const piece=
             document.createElement('span');
 
         piece.className='confetti-piece';
@@ -1394,15 +1584,6 @@ function launchConfetti(amount){
 
         const spin=
             (Math.random()*1080-540)+'deg';
-
-        const colors=[
-            '#55f0a2',
-            '#6d8aff',
-            '#ffdc5e',
-            '#ff6b8a',
-            '#b77cff',
-            '#ffffff'
-        ];
 
         piece.style.left=left+'%';
 
@@ -1433,15 +1614,15 @@ function launchConfetti(amount){
             spin
         );
 
-        container.appendChild(piece);
+        fragment.appendChild(piece);
 
         setTimeout(()=>{
-
             piece.remove();
-
         },2600);
 
     }
+
+    confettiContainer.appendChild(fragment);
 
 }
 
@@ -1450,17 +1631,14 @@ function launchConfetti(amount){
 
 function showFeedback(text,className){
 
-    const f =
-        document.getElementById('feedback');
-
-    f.className=
+    feedbackElement.className=
         'feedback '+className;
 
-    f.textContent=text;
+    feedbackElement.textContent=text;
 
-    void f.offsetWidth;
+    void feedbackElement.offsetWidth;
 
-    f.classList.add('show');
+    feedbackElement.classList.add('show');
 
 }
 
@@ -1471,9 +1649,20 @@ function saveScore(time,score){
 
     const key='mathScores';
 
-    let scores=JSON.parse(
-        localStorage.getItem(key)||'{}'
-    );
+    let scores;
+
+    try{
+
+        scores=
+            JSON.parse(
+                localStorage.getItem(key)||'{}'
+            );
+
+    }catch{
+
+        scores={};
+
+    }
 
     if(!scores[currentCategory]){
 
@@ -1485,32 +1674,42 @@ function saveScore(time,score){
 
     }
 
+    const category=
+        scores[currentCategory];
+
+    if(score>category.bestScore){
+
+        category.bestScore=score;
+
+    }
+
     if(
-        score >
-        scores[currentCategory].bestScore
+        timed &&
+        (
+            category.bestTime===null ||
+            time<category.bestTime
+        )
     ){
 
-        scores[currentCategory].bestScore=score;
+        category.bestTime=time;
 
     }
 
-    if(timed){
+    try{
 
-        if(
-            scores[currentCategory].bestTime===null ||
-            time<scores[currentCategory].bestTime
-        ){
+        localStorage.setItem(
+            key,
+            JSON.stringify(scores)
+        );
 
-            scores[currentCategory].bestTime=time;
+    }catch{
 
-        }
+        /*
+            localStorage kullanılamıyorsa
+            oyun çalışmaya devam eder.
+        */
 
     }
-
-    localStorage.setItem(
-        key,
-        JSON.stringify(scores)
-    );
 
 }
 
@@ -1519,14 +1718,25 @@ function saveScore(time,score){
 
 function showScores(){
 
-    const list =
+    const list=
         document.getElementById('scoreList');
 
     list.innerHTML='';
 
-    const scores=JSON.parse(
-        localStorage.getItem('mathScores')||'{}'
-    );
+    let scores;
+
+    try{
+
+        scores=
+            JSON.parse(
+                localStorage.getItem('mathScores')||'{}'
+            );
+
+    }catch{
+
+        scores={};
+
+    }
 
     const symbols={
         '+':'Toplama',
@@ -1561,17 +1771,29 @@ function showScores(){
 
     }else{
 
+        /*
+            En yüksek skoru üstte göster.
+        */
+
+        keys.sort(
+            (a,b)=>
+                scores[b].bestScore-
+                scores[a].bestScore
+        );
+
+        const fragment=
+            document.createDocumentFragment();
+
         keys.forEach(key=>{
 
             const parts=key.split('_');
 
             const op=parts[0];
-
             const count=parts[1];
 
             const digitInfo=
                 parts[2]
-                .replaceAll('-', ' × ');
+                .replaceAll('-',' × ');
 
             const modeInfo=
                 parts[3]==='timed'
@@ -1585,31 +1807,51 @@ function showScores(){
 
             card.className='score-card';
 
-            card.innerHTML=`
+            const left=
+                document.createElement('div');
 
-                <div class="score-card-left">
+            left.className='score-card-left';
 
-                    <div class="score-category">
-                        ${symbols[op]}
-                    </div>
+            const category=
+                document.createElement('div');
 
-                    <div class="score-detail">
-                        ${count} sayı •
-                        ${digitInfo} basamak
-                        ${modeInfo}
-                    </div>
+            category.className='score-category';
 
-                </div>
+            category.textContent=
+                symbols[op]||'İşlem';
 
-                <div class="score-value">
-                    ${data.bestScore}
-                </div>
+            const detail=
+                document.createElement('div');
 
-            `;
+            detail.className='score-detail';
 
-            list.appendChild(card);
+            detail.textContent=
+                `${count} sayı • ${digitInfo} basamak${modeInfo}`+
+                (
+                    data.bestTime!==null
+                        ? ` • En iyi: ${data.bestTime.toFixed(2)} sn`
+                        : ''
+                );
+
+            left.appendChild(category);
+            left.appendChild(detail);
+
+            const value=
+                document.createElement('div');
+
+            value.className='score-value';
+
+            value.textContent=
+                data.bestScore;
+
+            card.appendChild(left);
+            card.appendChild(value);
+
+            fragment.appendChild(card);
 
         });
+
+        list.appendChild(fragment);
 
     }
 
@@ -1635,3 +1877,4 @@ createDigitSelectors();
 
 </body>
 </html>
+```
