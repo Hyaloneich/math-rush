@@ -1,0 +1,1265 @@
+```html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Math Rush</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+    margin:0;
+    background:#080b14;
+    color:white;
+    font-family:Arial, sans-serif;
+    overflow:hidden;
+}
+
+button{
+    font-family:inherit;
+    border:none;
+    cursor:pointer;
+    color:white;
+}
+
+.screen{
+    position:absolute;
+    inset:0;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+}
+
+.screen.active{
+    display:flex;
+}
+
+/* ================= ANA MENÜ ================= */
+
+#menu{
+    justify-content:center;
+    padding:25px;
+    background:
+        radial-gradient(circle at top,#17234b 0%,#080b14 55%);
+}
+
+.logo{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:2px;
+    margin-bottom:35px;
+    text-shadow:0 0 20px #4d7cff;
+}
+
+.operation-buttons{
+    width:min(420px,90vw);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.op-btn{
+    height:105px;
+    border-radius:24px;
+    font-size:35px;
+    font-weight:bold;
+    background:linear-gradient(145deg,#182343,#10172d);
+    box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.08),
+        0 10px 30px rgba(0,0,0,.35);
+    transition:.15s;
+}
+
+.op-btn:active{
+    transform:scale(.94);
+}
+
+.add{box-shadow:0 0 25px rgba(60,220,140,.08);}
+.sub{box-shadow:0 0 25px rgba(255,190,60,.08);}
+.mul{box-shadow:0 0 25px rgba(90,130,255,.08);}
+.div{box-shadow:0 0 25px rgba(190,80,255,.08);}
+
+.score-menu{
+    width:min(420px,90vw);
+    margin-top:18px;
+    height:65px;
+    border-radius:20px;
+    background:#11192f;
+    font-size:19px;
+    font-weight:bold;
+}
+
+/* ================= AYARLAR ================= */
+
+#settings{
+    justify-content:flex-start;
+    padding:25px 18px;
+    overflow:auto;
+    background:radial-gradient(circle at top,#192650,#080b14 60%);
+}
+
+.top-title{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.back{
+    width:48px;
+    height:48px;
+    border-radius:15px;
+    background:#151e37;
+    font-size:22px;
+}
+
+.title{
+    font-size:25px;
+    font-weight:800;
+}
+
+.spacer{
+    width:48px;
+}
+
+.setting-box{
+    width:min(430px,100%);
+    background:rgba(20,28,52,.8);
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:15px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+.setting-label{
+    font-size:14px;
+    opacity:.65;
+    margin-bottom:12px;
+}
+
+.choice-row{
+    display:flex;
+    gap:8px;
+}
+
+.choice{
+    flex:1;
+    height:52px;
+    border-radius:15px;
+    background:#10172c;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.choice.selected{
+    background:linear-gradient(135deg,#4169ff,#754dff);
+    box-shadow:0 0 20px rgba(80,100,255,.35);
+}
+
+.digit-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.digit-name{
+    width:65px;
+    font-size:14px;
+    opacity:.7;
+}
+
+.digit-row .choice{
+    height:45px;
+    font-size:15px;
+}
+
+.start-btn{
+    width:min(430px,100%);
+    height:68px;
+    border-radius:22px;
+    background:linear-gradient(135deg,#456cff,#784dff);
+    font-size:20px;
+    font-weight:900;
+    margin-top:5px;
+    box-shadow:0 12px 30px rgba(70,80,255,.25);
+}
+
+/* ================= OYUN ================= */
+
+#game{
+    background:
+        radial-gradient(circle at 50% 30%,#151f42,#080b14 65%);
+}
+
+.game-top{
+    width:100%;
+    padding:18px 20px;
+    display:grid;
+    grid-template-columns:48px 1fr 1fr;
+    align-items:start;
+    gap:10px;
+}
+
+.game-back{
+    width:48px;
+    height:48px;
+    border-radius:15px;
+    background:#151e37;
+    font-size:22px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+
+.game-back:active{
+    transform:scale(.92);
+}
+
+.score-area,
+.timer-area{
+    display:flex;
+    flex-direction:column;
+}
+
+.small-label{
+    font-size:11px;
+    opacity:.55;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.game-score{
+    font-size:26px;
+    font-weight:900;
+}
+
+.timer-area{
+    grid-column:3;
+}
+
+.timer{
+    font-size:24px;
+    font-weight:900;
+    text-align:right;
+}
+
+.problem-area{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+}
+
+.problem{
+    font-size:clamp(35px,10vw,58px);
+    font-weight:900;
+    letter-spacing:2px;
+    margin-bottom:25px;
+    text-align:center;
+    text-shadow:0 0 30px rgba(100,130,255,.4);
+}
+
+.answer{
+    width:230px;
+    height:65px;
+    border-radius:18px;
+    background:#111a33;
+    border:2px solid rgba(255,255,255,.08);
+    text-align:center;
+    font-size:30px;
+    color:white;
+    outline:none;
+}
+
+.answer:focus{
+    border-color:#5575ff;
+    box-shadow:0 0 20px rgba(80,110,255,.3);
+}
+
+.keypad{
+    width:min(360px,94vw);
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+    padding:12px 12px 25px;
+}
+
+.key{
+    height:58px;
+    border-radius:16px;
+    background:#151e36;
+    font-size:22px;
+    font-weight:bold;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+
+.key:active{
+    transform:scale(.94);
+    background:#26345b;
+}
+
+.zero{
+    grid-column:span 2;
+}
+
+.enter{
+    grid-column:1 / -1;
+    background:linear-gradient(135deg,#45e79b,#20a875);
+    height:64px;
+    font-size:26px;
+    box-shadow:0 0 22px rgba(55,230,150,.18);
+}
+
+.delete{
+    background:#272d43;
+}
+
+/* ================= EFEKTLER ================= */
+
+.correct-flash{
+    animation:correctFlash .45s ease;
+}
+
+.wrong-flash{
+    animation:wrongFlash .45s ease;
+}
+
+@keyframes correctFlash{
+    0%{
+        background-color:transparent;
+        box-shadow:inset 0 0 0 0 rgba(60,255,150,0);
+    }
+    18%{
+        background-color:rgba(45,255,135,.16);
+        box-shadow:inset 0 0 140px 35px rgba(45,255,135,.52);
+    }
+    42%{
+        background-color:rgba(45,255,135,.08);
+        box-shadow:inset 0 0 95px 18px rgba(45,255,135,.34);
+    }
+    100%{
+        background-color:transparent;
+        box-shadow:inset 0 0 0 0 rgba(60,255,150,0);
+    }
+}
+
+.correct-answer-pop{
+    animation:correctAnswerPop .45s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes correctAnswerPop{
+    0%{
+        transform:scale(1);
+        border-color:rgba(255,255,255,.08);
+        box-shadow:0 0 0 rgba(60,255,150,0);
+    }
+    35%{
+        transform:scale(1.08);
+        border-color:#55f0a2;
+        box-shadow:0 0 34px rgba(55,255,155,.72);
+    }
+    100%{
+        transform:scale(1);
+        border-color:rgba(255,255,255,.08);
+        box-shadow:0 0 0 rgba(60,255,150,0);
+    }
+}
+
+@keyframes wrongFlash{
+    0%{transform:translateX(0);}
+    20%{transform:translateX(-7px);}
+    40%{transform:translateX(7px);}
+    60%{transform:translateX(-5px);}
+    80%{transform:translateX(5px);}
+    100%{transform:translateX(0);}
+}
+
+.pop{
+    animation:pop .35s ease;
+}
+
+@keyframes pop{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.18);}
+    100%{transform:scale(1);}
+}
+
+/* ================= KONFETİ ================= */
+
+#confetti{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:50;
+}
+
+.confetti-piece{
+    position:absolute;
+    top:-24px;
+    width:7px;
+    height:12px;
+    border-radius:2px;
+    opacity:0;
+    animation:confettiFall var(--fall) cubic-bezier(.18,.72,.25,1) forwards;
+    transform:rotate(var(--rotate));
+}
+
+@keyframes confettiFall{
+    0%{
+        opacity:1;
+        transform:translate3d(0,-25px,0) rotate(0deg);
+    }
+    70%{
+        opacity:1;
+    }
+    100%{
+        opacity:0;
+        transform:translate3d(var(--drift),105vh,0) rotate(var(--spin));
+    }
+}
+
+/* ================= SKORLAR ================= */
+
+#scores{
+    justify-content:flex-start;
+    padding:25px 18px;
+    background:radial-gradient(circle at top,#192650,#080b14 60%);
+    overflow:auto;
+}
+
+.score-list{
+    width:min(450px,100%);
+}
+
+.score-card{
+    background:#121a31;
+    border-radius:20px;
+    padding:17px;
+    margin-bottom:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.score-card-left{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.score-category{
+    font-weight:bold;
+}
+
+.score-detail{
+    font-size:12px;
+    opacity:.55;
+}
+
+.score-value{
+    font-size:20px;
+    font-weight:900;
+    color:#6d8aff;
+}
+
+/* ================= BİLDİRİM ================= */
+
+.feedback{
+    position:fixed;
+    left:50%;
+    top:43%;
+    transform:translate(-50%,-50%) scale(.7);
+    font-size:32px;
+    font-weight:900;
+    opacity:0;
+    pointer-events:none;
+    z-index:20;
+}
+
+.feedback.show{
+    animation:feedback .5s ease;
+}
+
+@keyframes feedback{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.6);}
+    25%{opacity:1;transform:translate(-50%,-50%) scale(1.15);}
+    70%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+    100%{opacity:0;transform:translate(-50%,-65%) scale(1);}
+}
+
+.correct-text{
+    color:#55f0a2;
+    text-shadow:0 0 25px rgba(70,255,160,.8);
+}
+
+.wrong-text{
+    color:#ff6175;
+    text-shadow:0 0 25px rgba(255,60,80,.8);
+}
+
+@media(max-height:650px){
+    .key{height:48px;}
+    .problem{margin-bottom:12px;}
+    .answer{height:55px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ANA MENÜ -->
+<div id="menu" class="screen active">
+
+    <div class="logo">MATH RUSH</div>
+
+    <div class="operation-buttons">
+        <button class="op-btn add" onclick="openSettings('+')">＋</button>
+        <button class="op-btn sub" onclick="openSettings('-')">−</button>
+        <button class="op-btn mul" onclick="openSettings('*')">×</button>
+        <button class="op-btn div" onclick="openSettings('/')">÷</button>
+    </div>
+
+    <button class="score-menu" onclick="showScores()">🏆 SKORLAR</button>
+
+</div>
+
+
+<!-- AYARLAR -->
+<div id="settings" class="screen">
+
+    <div class="top-title">
+        <button class="back" onclick="showScreen('menu')">‹</button>
+        <div class="title" id="settingsTitle">Çarpma</div>
+        <div class="spacer"></div>
+    </div>
+
+    <div class="setting-box">
+
+        <div class="setting-label">KAÇ SAYI?</div>
+
+        <div class="choice-row">
+            <button class="choice" onclick="selectCount(2,this)">2</button>
+            <button class="choice" onclick="selectCount(3,this)">3</button>
+            <button class="choice" onclick="selectCount(4,this)">4</button>
+        </div>
+
+    </div>
+
+    <div class="setting-box">
+
+        <div class="setting-label">SAYILARIN BASAMAK SAYISI</div>
+
+        <div id="digitContainer"></div>
+
+    </div>
+
+    <div class="setting-box">
+
+        <div class="setting-label">OYUN MODU</div>
+
+        <div class="choice-row">
+            <button class="choice selected" onclick="selectMode(false,this)">SÜRESİZ</button>
+            <button class="choice" onclick="selectMode(true,this)">SÜRELİ</button>
+        </div>
+
+    </div>
+
+    <button class="start-btn" onclick="startGame()">BAŞLA</button>
+
+</div>
+
+
+<!-- OYUN -->
+<div id="game" class="screen">
+
+    <div class="game-top">
+
+        <button class="game-back" onclick="exitGame()" aria-label="Geri">‹</button>
+
+        <div class="score-area">
+            <span class="small-label">SERİ SKORU</span>
+            <span class="game-score" id="gameScore">0</span>
+        </div>
+
+        <div class="timer-area" id="timerArea">
+            <span class="small-label">SÜRE</span>
+            <span class="timer" id="timer">0.00</span>
+        </div>
+
+    </div>
+
+    <div class="problem-area">
+
+        <div class="problem" id="problem">12 × 34</div>
+
+        <input
+            id="answer"
+            class="answer"
+            type="number"
+            inputmode="numeric"
+            autocomplete="off"
+            onkeydown="keyboardAnswer(event)"
+        >
+
+    </div>
+
+    <div class="keypad">
+
+        <button class="key" onclick="keyPress('1')">1</button>
+        <button class="key" onclick="keyPress('2')">2</button>
+        <button class="key" onclick="keyPress('3')">3</button>
+
+        <button class="key" onclick="keyPress('4')">4</button>
+        <button class="key" onclick="keyPress('5')">5</button>
+        <button class="key" onclick="keyPress('6')">6</button>
+
+        <button class="key" onclick="keyPress('7')">7</button>
+        <button class="key" onclick="keyPress('8')">8</button>
+        <button class="key" onclick="keyPress('9')">9</button>
+
+        <button class="key zero" onclick="keyPress('0')">0</button>
+        <button class="key delete" onclick="deleteKey()">⌫</button>
+
+        <button class="key enter" onclick="checkAnswer()">✓</button>
+
+    </div>
+
+</div>
+
+
+<!-- SKORLAR -->
+<div id="scores" class="screen">
+
+    <div class="top-title">
+        <button class="back" onclick="showScreen('menu')">‹</button>
+        <div class="title">Skorlar</div>
+        <div class="spacer"></div>
+    </div>
+
+    <div id="scoreList" class="score-list"></div>
+
+</div>
+
+
+<div id="feedback" class="feedback"></div>
+<div id="confetti"></div>
+
+
+<script>
+
+let operation = '+';
+let numberCount = 2;
+let digits = [1,1,1,1];
+let timed = false;
+
+let currentNumbers = [];
+let correctAnswer = 0;
+
+let seriesScore = 0;
+let correctStreak = 0;
+let timerStart = 0;
+let timerInterval = null;
+
+let currentCategory = '';
+
+/* ================= EKRAN ================= */
+
+function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s=>{
+        s.classList.remove('active');
+    });
+
+    document.getElementById(id).classList.add('active');
+}
+
+
+/* ================= AYARLAR ================= */
+
+function openSettings(op){
+
+    operation = op;
+
+    const names = {
+        '+':'Toplama',
+        '-':'Çıkarma',
+        '*':'Çarpma',
+        '/':'Bölme'
+    };
+
+    document.getElementById('settingsTitle').textContent = names[op];
+
+    showScreen('settings');
+
+    selectCount(2);
+
+}
+
+function selectCount(count,button){
+
+    numberCount = count;
+
+    document.querySelectorAll('.choice').forEach(b=>{
+        if(b.textContent.trim()==String(count)){
+            if(b.parentElement.parentElement.querySelector('.setting-label')){
+                b.classList.add('selected');
+            }
+        }
+    });
+
+    document.querySelectorAll('.setting-box:first-of-type .choice')
+        .forEach(b=>b.classList.remove('selected'));
+
+    if(button) button.classList.add('selected');
+
+    if(!button){
+        const buttons =
+            document.querySelectorAll('.setting-box:first-of-type .choice');
+
+        buttons[count-2].classList.add('selected');
+    }
+
+    createDigitSelectors();
+}
+
+function createDigitSelectors(){
+
+    const container = document.getElementById('digitContainer');
+
+    container.innerHTML = '';
+
+    for(let i=0;i<numberCount;i++){
+
+        const row = document.createElement('div');
+
+        row.className='digit-row';
+
+        row.innerHTML = `
+            <div class="digit-name">${i+1}. SAYI</div>
+
+            <button class="choice ${digits[i]===1?'selected':''}"
+                onclick="selectDigit(${i},1,this)">1</button>
+
+            <button class="choice ${digits[i]===2?'selected':''}"
+                onclick="selectDigit(${i},2,this)">2</button>
+
+            <button class="choice ${digits[i]===3?'selected':''}"
+                onclick="selectDigit(${i},3,this)">3</button>
+        `;
+
+        container.appendChild(row);
+    }
+}
+
+function selectDigit(index,value,button){
+
+    digits[index]=value;
+
+    button.parentElement
+        .querySelectorAll('.choice')
+        .forEach(b=>b.classList.remove('selected'));
+
+    button.classList.add('selected');
+}
+
+function selectMode(value,button){
+
+    timed=value;
+
+    button.parentElement
+        .querySelectorAll('.choice')
+        .forEach(b=>b.classList.remove('selected'));
+
+    button.classList.add('selected');
+}
+
+
+/* ================= SAYI ÜRETME ================= */
+
+function randomNumber(digit){
+
+    if(digit===1){
+        return Math.floor(Math.random()*9)+1;
+    }
+
+    const min=Math.pow(10,digit-1);
+    const max=Math.pow(10,digit)-1;
+
+    return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+function generateProblem(){
+
+    currentNumbers=[];
+
+    for(let i=0;i<numberCount;i++){
+        currentNumbers.push(randomNumber(digits[i]));
+    }
+
+    if(operation=='+'){
+        correctAnswer=currentNumbers.reduce((a,b)=>a+b,0);
+    }
+
+    if(operation=='-'){
+        correctAnswer=currentNumbers
+            .slice(1)
+            .reduce((a,b)=>a-b,currentNumbers[0]);
+    }
+
+    if(operation=='*'){
+        correctAnswer=currentNumbers.reduce((a,b)=>a*b,1);
+    }
+
+    if(operation=='/'){
+
+        /*
+          Bölmede tam sayı sonuç üretmek için
+          ilk sayı, diğer sayıların çarpımı üzerinden oluşturulur.
+        */
+
+        let divisor=1;
+
+        for(let i=1;i<numberCount;i++){
+            divisor*=currentNumbers[i];
+        }
+
+        let quotient=randomNumber(
+            Math.max(1,digits[0]-1)
+        );
+
+        currentNumbers[0]=divisor*quotient;
+
+        correctAnswer=quotient;
+    }
+
+    let symbols={
+        '+':' + ',
+        '-':' − ',
+        '*':' × ',
+        '/':' ÷ '
+    };
+
+    document.getElementById('problem').textContent =
+        currentNumbers.join(symbols[operation]);
+
+    document.getElementById('answer').value='';
+
+    setTimeout(()=>{
+        document.getElementById('answer').focus();
+    },100);
+
+}
+
+
+/* ================= OYUN ================= */
+
+function exitGame(){
+    clearInterval(timerInterval);
+    timerInterval=null;
+    correctStreak=0;
+    showScreen('menu');
+}
+
+function startGame(){
+
+    clearInterval(timerInterval);
+    timerInterval=null;
+    seriesScore=0;
+    correctStreak=0;
+
+    document.getElementById('gameScore').textContent='0';
+
+    currentCategory =
+        operation+'_'+
+        numberCount+'_'+
+        digits.slice(0,numberCount).join('-')+'_'+
+        (timed ? 'timed' : 'untimed');
+
+    showScreen('game');
+
+    if(timed){
+        document.getElementById('timerArea').style.visibility='visible';
+        document.getElementById('timer').textContent='0.00';
+    }else{
+        document.getElementById('timerArea').style.visibility='hidden';
+        document.getElementById('timer').textContent='0.00';
+    }
+
+    generateProblem();
+
+    if(timed){
+        startTimer();
+    }
+
+}
+
+function startTimer(){
+
+    clearInterval(timerInterval);
+
+    timerStart=performance.now();
+
+    timerInterval=setInterval(()=>{
+
+        const elapsed =
+            (performance.now()-timerStart)/1000;
+
+        document.getElementById('timer').textContent =
+            elapsed.toFixed(2);
+
+    },20);
+
+}
+
+function getElapsed(){
+
+    return (performance.now()-timerStart)/1000;
+
+}
+
+
+/* ================= CEVAP ================= */
+
+function keyPress(number){
+
+    const input=document.getElementById('answer');
+
+    input.value += number;
+
+    input.focus();
+
+    input.classList.remove('pop');
+
+    void input.offsetWidth;
+
+    input.classList.add('pop');
+}
+
+function deleteKey(){
+
+    const input=document.getElementById('answer');
+
+    input.value=input.value.slice(0,-1);
+
+    input.focus();
+}
+
+function keyboardAnswer(e){
+
+    if(e.key==='Enter'){
+        e.preventDefault();
+        checkAnswer();
+    }
+
+}
+
+function checkAnswer(){
+
+    const input=document.getElementById('answer');
+
+    if(input.value==='') return;
+
+    const userAnswer=Number(input.value);
+
+    if(userAnswer===correctAnswer){
+
+        correct();
+
+    }else{
+
+        wrong();
+
+    }
+
+}
+
+function correct(){
+
+    const elapsed=timed ? getElapsed() : 0;
+
+    /*
+      Puanlama:
+      Süresiz = +100
+      Süreli = hıza göre değişen puan
+    */
+
+    let points;
+
+    if(timed){
+        points=Math.max(
+            10,
+            Math.round(1000/(elapsed+0.5))
+        );
+    }else{
+        points=100;
+    }
+
+    seriesScore+=points;
+
+    // Arka arkaya doğru cevap serisi
+    correctStreak++;
+
+    document.getElementById('gameScore').textContent=seriesScore;
+
+    // Doğru cevap efekti artık daha güçlü
+    showFeedback(
+        correctStreak>=3 ? '✓ DOĞRU!  +' + correctStreak : '✓ DOĞRU',
+        'correct-text'
+    );
+
+    const game=document.getElementById('game');
+
+    game.classList.remove('correct-flash');
+    void game.offsetWidth;
+    game.classList.add('correct-flash');
+
+    // Cevap kutusunu da daha belirgin şekilde parlat
+    const answer=document.getElementById('answer');
+    answer.classList.remove('correct-answer-pop');
+    void answer.offsetWidth;
+    answer.classList.add('correct-answer-pop');
+
+    /*
+      3 doğru: az konfeti
+      4 doğru: daha fazla konfeti
+      5 doğru: maksimum konfeti
+      5'ten sonra seri sıfırlanır.
+    */
+    if(correctStreak===3){
+        launchConfetti(12);
+    }else if(correctStreak===4){
+        launchConfetti(24);
+    }else if(correctStreak===5){
+        launchConfetti(40);
+        correctStreak=0;
+    }
+
+    saveScore(elapsed,seriesScore);
+
+    if(timed){
+        startTimer();
+    }
+
+    setTimeout(generateProblem,350);
+}
+
+function wrong(){
+
+    correctStreak=0;
+
+    showFeedback('✕ YANLIŞ','wrong-text');
+
+    document.getElementById('game')
+        .classList.remove('wrong-flash');
+
+    void document.getElementById('game').offsetWidth;
+
+    document.getElementById('game')
+        .classList.add('wrong-flash');
+
+    if(timed){
+        startTimer();
+    }
+
+    setTimeout(generateProblem,350);
+
+}
+
+
+/* ================= KONFETİ ================= */
+
+function launchConfetti(amount){
+
+    const container=document.getElementById('confetti');
+
+    for(let i=0;i<amount;i++){
+
+        const piece=document.createElement('span');
+        piece.className='confetti-piece';
+
+        const left=Math.random()*100;
+        const drift=(Math.random()*2-1)*180;
+        const fall=(1.25+Math.random()*1.15).toFixed(2)+'s';
+        const rotate=(Math.random()*360-180)+'deg';
+        const spin=(Math.random()*1080-540)+'deg';
+
+        const colors=[
+            '#55f0a2',
+            '#6d8aff',
+            '#ffdc5e',
+            '#ff6b8a',
+            '#b77cff',
+            '#ffffff'
+        ];
+
+        piece.style.left=left+'%';
+        piece.style.background=colors[Math.floor(Math.random()*colors.length)];
+        piece.style.setProperty('--drift',drift+'px');
+        piece.style.setProperty('--fall',fall);
+        piece.style.setProperty('--rotate',rotate);
+        piece.style.setProperty('--spin',spin);
+
+        container.appendChild(piece);
+
+        setTimeout(()=>{
+            piece.remove();
+        },2600);
+    }
+}
+
+/* ================= GERİ BİLDİRİM ================= */
+
+function showFeedback(text,className){
+
+    const f=document.getElementById('feedback');
+
+    f.className='feedback '+className;
+
+    f.textContent=text;
+
+    void f.offsetWidth;
+
+    f.classList.add('show');
+
+}
+
+
+/* ================= SKOR KAYDI ================= */
+
+function saveScore(time,score){
+
+    const key='mathScores';
+
+    let scores=JSON.parse(
+        localStorage.getItem(key)||'{}'
+    );
+
+    if(!scores[currentCategory]){
+        scores[currentCategory]={
+            timed:timed,
+            bestScore:0,
+            bestTime:null
+        };
+    }
+
+    if(score>scores[currentCategory].bestScore){
+        scores[currentCategory].bestScore=score;
+    }
+
+    if(timed){
+
+        if(
+            scores[currentCategory].bestTime===null ||
+            time<scores[currentCategory].bestTime
+        ){
+            scores[currentCategory].bestTime=time;
+        }
+
+    }
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(scores)
+    );
+
+}
+
+
+/* ================= SKOR EKRANI ================= */
+
+function showScores(){
+
+    const list=document.getElementById('scoreList');
+
+    list.innerHTML='';
+
+    const scores=JSON.parse(
+        localStorage.getItem('mathScores')||'{}'
+    );
+
+    const symbols={
+        '+':'Toplama',
+        '-':'Çıkarma',
+        '*':'Çarpma',
+        '/':'Bölme'
+    };
+
+    const keys=Object.keys(scores);
+
+    if(keys.length===0){
+
+        list.innerHTML=`
+            <div class="score-card">
+                <div class="score-card-left">
+                    <div class="score-category">
+                        Henüz skor yok
+                    </div>
+                    <div class="score-detail">
+                        Birkaç işlem çözerek skor oluştur.
+                    </div>
+                </div>
+            </div>
+        `;
+
+    }else{
+
+        keys.forEach(key=>{
+
+            const parts=key.split('_');
+
+            const op=parts[0];
+            const count=parts[1];
+            const digitInfo=parts[2].replaceAll('-', ' × ');
+            const modeInfo=parts[3]==='timed' ? ' • Süreli' : ' • Süresiz';
+
+            const data=scores[key];
+
+            const card=document.createElement('div');
+
+            card.className='score-card';
+
+            card.innerHTML=`
+                <div class="score-card-left">
+                    <div class="score-category">
+                        ${symbols[op]}
+                    </div>
+
+                    <div class="score-detail">
+                        ${count} sayı • ${digitInfo} basamak${modeInfo}
+                    </div>
+                </div>
+
+                <div class="score-value">
+                    ${data.bestScore}
+                </div>
+            `;
+
+            list.appendChild(card);
+
+        });
+
+    }
+
+    showScreen('scores');
+
+}
+
+
+/* ================= BAŞLANGIÇ ================= */
+
+createDigitSelectors();
+
+</script>
+
+</body>
+</html>
+
+```
